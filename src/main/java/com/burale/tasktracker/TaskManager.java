@@ -1,69 +1,118 @@
 package com.burale.tasktracker;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class Task {
-    private int id;
-    private String description;
-    private Status status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+public class TaskManager {
+    private final File file = new File("tasks.json");
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private List<Task> tasks;
 
-    public enum Status {
-        TODO,
-        IN_PROGRESS,
-        DONE
+    public TaskManager() {
+        tasks = loadTasks();
     }
 
-    public Task(int id, String description) {
-        this.id = id;
-        this.description = description;
-        this.status = Status.TODO;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    // Load tasks from JSON
+    private List<Task> loadTasks() {
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+        try {
+            return objectMapper.readValue(file, new TypeReference<List<Task>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
-    // --- Getters ---
-    public int getId() {
-        return id;
+    // Save tasks to JSON
+    private void saveTasks() {
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, tasks);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getDescription() {
-        return description;
+    // Generate next available ID
+    private int generateNextId() {
+        return tasks.stream().mapToInt(Task::getId).max().orElse(0) + 1;
     }
 
-    public Status getStatus() {
-        return status;
+    // Add new task
+    public void addTask(String description) {
+        Task task = new Task(generateNextId(), description);
+        tasks.add(task);
+        saveTasks();
+        System.out.println("Task added successfully (ID: " + task.getId() + ")");
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    // Update task
+    public void updateTask(int id, String newDescription) {
+        Task task = findTaskById(id);
+        if (task != null) {
+            task.setDescription(newDescription);
+            saveTasks();
+            System.out.println("Task updated successfully.");
+        }
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    // Delete task
+    public void deleteTask(int id) {
+        Task task = findTaskById(id);
+        if (task != null) {
+            tasks.remove(task);
+            saveTasks();
+            System.out.println("Task deleted.");
+        }
     }
 
-    // --- Setters ---
-    public void setDescription(String description) {
-        this.description = description;
-        this.updatedAt = LocalDateTime.now();
+    // Mark as in-progress
+    public void markInProgress(int id) {
+        Task task = findTaskById(id);
+        if (task != null) {
+            task.setStatus(Task.Status.IN_PROGRESS);
+            saveTasks();
+            System.out.println("Task marked as in-progress.");
+        }
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-        this.updatedAt = LocalDateTime.now();
+    // Mark as done
+    public void markDone(int id) {
+        Task task = findTaskById(id);
+        if (task != null) {
+            task.setStatus(Task.Status.DONE);
+            saveTasks();
+            System.out.println("Task marked as done.");
+        }
     }
 
-    // --- Debug/Print ---
-    @Override
-    public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+    // List all tasks
+    public void listTasks() {
+        tasks.forEach(System.out::println);
+    }
+
+    // List by status
+    public void listByStatus(Task.Status status) {
+        tasks.stream()
+                .filter(t -> t.getStatus() == status)
+                .forEach(System.out::println);
+    }
+
+    // Utility: find task
+    private Task findTaskById(int id) {
+        return tasks.stream()
+                .filter(t -> t.getId() == id)
+                .findFirst()
+                .orElseGet(() -> {
+                    System.out.println("Task not found.");
+                    return null;
+                });
     }
 }
