@@ -9,6 +9,8 @@ public class Task {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public Task() {}
+
     public enum Status {
         TODO,
         IN_PROGRESS,
