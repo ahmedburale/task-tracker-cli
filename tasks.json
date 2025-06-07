@@ -4,4 +4,10 @@
   "status" : "TODO",
   "createdAt" : "2025-06-07T08:46:01.9682954",
   "updatedAt" : "2025-06-07T08:46:01.9693016"
+}, {
+  "id" : 2,
+  "description" : "Buy groceries",
+  "status" : "TODO",
+  "createdAt" : "2025-06-07T09:04:28.0565025",
+  "updatedAt" : "2025-06-07T09:04:28.0565025"
 } ]
