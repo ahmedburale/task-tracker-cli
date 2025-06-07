@@ -1,17 +1,12 @@
-# ✅ Task Tracker CLI (Java)
+# Task Tracker CLI
 
-A command-line task manager built in Java using JSON storage. No frameworks, no database — just simple and effective CLI-based task tracking.
+A simple Java command-line application to manage your tasks (add, list, update, delete) using JSON for storage.
 
----
+## Features
+- Add a task
+- Update a task
+- Delete a task
+- Mark task as `in-progress` or `done`
+- List tasks by status
+- Tasks are stored in `tasks.json`
 
-## ✨ Features
-
-- Add new tasks
-- List all tasks
-- Update task descriptions
-- Mark tasks as in-progress or done
-- Delete tasks
-- Filter tasks by status (todo, done, in-progress)
-- Stores data in `tasks.json` file (no DB required)
-
----
