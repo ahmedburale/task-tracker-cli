@@ -79,10 +79,14 @@ public class Main {
                     taskManager.listTasks();
                 } else if (args.length == 2) {
                     try {
-                        Task.Status status = Task.Status.valueOf(args[1].toUpperCase());
+                        String normalizedStatus = args[1].replace('-', '_').toUpperCase();
+                        Task.Status status = Task.Status.valueOf(normalizedStatus);
                         taskManager.listByStatus(status);
                     } catch (IllegalArgumentException e) {
-                        System.out.println("Invalid status. Use: todo, in-progress, done");
+                        String supported = java.util.Arrays.stream(Task.Status.values())
+                                .map(s -> s.name().toLowerCase().replace('_', '-'))
+                                .collect(java.util.stream.Collectors.joining(", "));
+                        System.out.println("Invalid status. Supported options: " + supported);
                     }
                 } else {
                     System.out.println("Usage: task-cli list [status]");
