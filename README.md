@@ -5,7 +5,7 @@ A command-line Java application to track and manage your tasks. This project hel
 ## 🚀 Features
 
 - Add, update, and delete tasks
-- Mark tasks as TODO, IN_PROGRESS, or DONE
+- Mark tasks as IN_PROGRESS or DONE (new tasks start as TODO)
 - List tasks or filter by status
 - Persistent storage using `tasks.json`
 
@@ -33,7 +33,6 @@ java -cp "target\classes;[same classpath]" com.burale.tasktracker.Main mark-in-p
 java -cp "target\classes;[same classpath]" com.burale.tasktracker.Main mark-done 1
 
 # List tasks by status
-java -cp "target\classes;[same classpath]" com.burale.tasktracker.Main list todo
 java -cp "target\classes;[same classpath]" com.burale.tasktracker.Main list done
 java -cp "target\classes;[same classpath]" com.burale.tasktracker.Main list in-progress
 
